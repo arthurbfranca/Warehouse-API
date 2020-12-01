@@ -43,8 +43,8 @@ class Item(models.Model):
         return self.Name
 
     
-class Vehicule(models.Model):
-    Vehicule_id = models.IntegerField(primary_key=True)
+class Vehicle(models.Model):
+    Vehicle_id = models.IntegerField(primary_key=True)
     size = models.CharField(max_length=10)
     model = models.CharField(max_length=30)
     
@@ -64,4 +64,7 @@ class Works_At(models.Model):
     
     
 #class Transaction(models.Model):
-#   WH_Receiver_id = models.ForeignKey(Warehouse, on_delete= )
+   #Transaction_id = models.IntegerField(primary_key= True)
+   #WH_Receiver_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING)
+   #WH_Sender_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING)
+   #Driver_id = models.ForeignKey(null=True, on_delete = models.SET_NULL )
