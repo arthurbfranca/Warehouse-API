@@ -7,3 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = models.User
         fields = '__all__'
 
+class EmployeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Employee
+        fields = '__all__'
