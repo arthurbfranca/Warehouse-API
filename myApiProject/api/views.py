@@ -67,3 +67,17 @@ class WarehouseList (APIView):
             serializer.save ( )
             return Response (serializer.data, status=status.HTTP_201_CREATED)
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ItemList (APIView):
+    def get(self, request, format=None):
+        items = Item.objects.all()
+        serializer = ItemSerializer (items, many=True)
+        return Response (serializer.data)
+
+    def post(self, request, format=None):
+        serializer = ItemSerializer (data=request.data)
+        if serializer.is_valid ( ):
+            serializer.save ( )
+            return Response (serializer.data, status=status.HTTP_201_CREATED)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
