@@ -43,12 +43,26 @@ class UserDetail (APIView):
 
 class EmployeeList (APIView):
     def get(self, request, format=None):
-        users = Employee.objects.all()
-        serializer = EmployeeSerializer (users, many=True)
+        emps = Employee.objects.all()
+        serializer = EmployeeSerializer (emps, many=True)
         return Response (serializer.data)
 
     def post(self, request, format=None):
-        serializer = UserSerializer (data=request.data)
+        serializer = EmployeeSerializer (data=request.data)
+        if serializer.is_valid ( ):
+            serializer.save ( )
+            return Response (serializer.data, status=status.HTTP_201_CREATED)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class WarehouseList (APIView):
+    def get(self, request, format=None):
+        whs = Warehouse.objects.all()
+        serializer = WarehouseSerializer (whs, many=True)
+        return Response (serializer.data)
+
+    def post(self, request, format=None):
+        serializer = WarehouseSerializer (data=request.data)
         if serializer.is_valid ( ):
             serializer.save ( )
             return Response (serializer.data, status=status.HTTP_201_CREATED)
