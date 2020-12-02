@@ -82,8 +82,8 @@ class ItemList (APIView):
             return Response (serializer.data, status=status.HTTP_201_CREATED)
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 		
-class RouteList (APIView):
-	def get(self, request, format=None)
+class Routes (APIView):
+	def get(self, request, format=None):
 		users = Route.objects.all()
 		serializer = RouteSerializer (users, many=True)
 		return Response(serializer.data)

@@ -14,7 +14,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
 class RouteSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = models.RouteList
+		model = models.Route
 		fields = '__all__'
 
 class WarehouseSerializer(serializers.ModelSerializer):
