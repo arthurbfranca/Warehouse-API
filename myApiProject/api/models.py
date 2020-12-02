@@ -133,14 +133,14 @@ class Transfer(models.Model):
     Transaction_id = models.ForeignKey(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True, default= 0)
     
     def __str__(self):
-        return '%s %s %s' % (self.Transaction_id,  self.WH_Receiver_id, self.WH_Sender_id)
+        return '%s %s' % (self.Transaction_id, self.Item_id)
     
 class Request(models.Model):
     Admin_id = models.ForeignKey(Employee, on_delete=models.DO_NOTHING)
     Transaction_id = models.ForeignKey(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True, default= 0)
     
     def __str__(self):
-        return '%s %s %s %s' % (self.Admin_id,  self.WH_Receiver_id, self.WH_Sender_id, self.Transaction_id)
+        return '%s %s' % (self.Admin_id, self.Transaction_id)
     
 
 class Issue(models.Model):
@@ -148,7 +148,7 @@ class Issue(models.Model):
     Transaction_id = models.ForeignKey(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True, default= 0)
     
     def __str__(self):
-        return '%s %s %s %s' % (self.Exec_id,  self.WH_Receiver_id, self.WH_Sender_id, self.Transaction_id)
+        return '%s %s' % (self.Exec_id, self.Transaction_id)
     
 class Drive(models.Model):
     Vehicle_id = models.ForeignKey(Vehicle, on_delete = models.CASCADE, serialize= True)
