@@ -45,7 +45,7 @@ class Item(models.Model):
 
 
 class Vehicle(models.Model):
-    Vehicle_id = models.IntegerField(primary_key=True, serialize= True)
+    Vehicle_id = models.IntegerField(primary_key=True, serialize= True, default= 0)
     size = models.CharField(max_length=10)
     model = models.CharField(max_length=30)
 
@@ -65,6 +65,7 @@ class Works_At(models.Model):
 
 
 class Route(models.Model):
+<<<<<<< Updated upstream
     Route_id = models.IntegerField(primary_key=True,serialize= True)
 <<<<<<< HEAD
     Path = models.CharField(max_length= 200)
@@ -76,13 +77,16 @@ class Transaction(models.Model):
    Driver_id = models.ForeignKey(Employee, null=True, on_delete=models.SET_NULL, blank = True)
    Route_id = models.ForeignKey(Route, null=True, on_delete=models.SET_NULL, blank = True)
 =======
+=======
+    Route_id = models.IntegerField(primary_key=True,serialize= True, default= 0)
+>>>>>>> Stashed changes
     Path = models.CharField(max_length= 200)    
     
     def __str__(self):
         return '%s %s' % (self.Route_id,  self.Path)
     
 class Transaction(models.Model):
-    Transaction_id = models.IntegerField(primary_key= True, serialize= True)
+    Transaction_id = models.IntegerField(primary_key= True, serialize= True , default= 0)
     WH_Receiver_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING, related_name= 'WH_Sender_id')
     WH_Sender_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING, related_name= 'WH_Receiver_id')
     Driver_id = models.ForeignKey(Employee, null=True, on_delete=models.SET_NULL, blank = True)
@@ -92,7 +96,7 @@ class Transaction(models.Model):
         return '%s %s %s' % (self.Transaction_id,  self.WH_Receiver_id, self.WH_Sender_id)
    
 class Customer(models.Model):
-    Cid = models.IntegerField(primary_key= True, serialize= True)
+    Cid = models.IntegerField(primary_key= True, serialize= True, default= 0)
     Caddress = models.CharField(max_length= 100)
     Name = models.CharField(max_length=30)
     
@@ -101,8 +105,8 @@ class Customer(models.Model):
 
 class Ship(models.Model):
     Driver_id = models.ForeignKey(Employee, null= True, default= None, blank= True, on_delete=models.SET_NULL)
-    Item_id = models.ForeignKey(Item, on_delete=models.CASCADE ,serialize= True)
-    Cid = models.ForeignKey(Customer, on_delete=models.CASCADE, serialize= True)
+    Item_id = models.ForeignKey(Item, on_delete=models.CASCADE ,serialize= True, default= 0)
+    Cid = models.ForeignKey(Customer, on_delete=models.CASCADE, serialize= True, default= 0)
     Route_id = models.ForeignKey(Route, null= True, default= None, blank = True, on_delete =models.SET_NULL)
     Quantity = models.IntegerField(default=1)
     Status = models.BooleanField(default= False)    ##false is incomplete
@@ -114,8 +118,8 @@ class Ship(models.Model):
         unique_together = (('Cid', 'Item_id'))
 
 class Subsection(models.Model):
-    Warehouse_id = models.ForeignKey(Warehouse, on_delete= models.CASCADE, serialize= True)
-    Name = models.CharField(max_length= 100, serialize= True)
+    Warehouse_id = models.ForeignKey(Warehouse, on_delete= models.CASCADE, serialize= True, default= 0)
+    Name = models.CharField(max_length= 100, serialize= True, default= 'Unnamed')
     Total_space = models.DecimalField(decimal_places= 2, max_digits= 8, default= 100)
     
     def __str__(self):
@@ -126,9 +130,9 @@ class Subsection(models.Model):
 
     
 class Store(models.Model):
-    Warehouse_id = models.ForeignKey(Warehouse, on_delete=models.CASCADE, serialize=True)
-    Subsection_name = models.ForeignKey(Subsection, on_delete=models.CASCADE,serialize= True )
-    Item_id = models.ForeignKey(Item, on_delete= models.CASCADE, serialize=True)
+    Warehouse_id = models.ForeignKey(Warehouse, on_delete=models.CASCADE, serialize=True, default= 0)
+    Subsection_name = models.ForeignKey(Subsection, on_delete=models.CASCADE,serialize= True, default= 0 )
+    Item_id = models.ForeignKey(Item, on_delete= models.CASCADE, serialize=True, default= 0)
     Quantity = models.IntegerField(default= 1)
     
     def __str__(self):
@@ -139,18 +143,18 @@ class Store(models.Model):
         
 class Transfer(models.Model):
     Item_id = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
-    WH_Receiver_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING, related_name= 'WH_Sender_id')
-    WH_Sender_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING, related_name= 'WH_Receiver_id', null = True)
-    Transaction_id = models.ForeignKey(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True)
+    WH_Receiver_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING)
+    WH_Sender_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING, null = True)
+    Transaction_id = models.ForeignKey(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True, default= 0)
     
     def __str__(self):
         return '%s %s %s' % (self.Transaction_id,  self.WH_Receiver_id, self.WH_Sender_id)
     
 class Request(models.Model):
     Admin_id = models.ForeignKey(Employee, on_delete=models.DO_NOTHING)
-    WH_Receiver_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING, related_name= 'WH_Sender_id')
-    WH_Sender_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING, related_name= 'WH_Receiver_id', null= True)
-    Transaction_id = models.ForeignKey(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True)
+    WH_Receiver_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING)
+    WH_Sender_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING, null= True)
+    Transaction_id = models.ForeignKey(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True, default= 0)
     
     def __str__(self):
         return '%s %s %s %s' % (self.Admin_id,  self.WH_Receiver_id, self.WH_Sender_id, self.Transaction_id)
@@ -158,9 +162,9 @@ class Request(models.Model):
 
 class Issue(models.Model):
     Exec_id = models.ForeignKey(Employee, on_delete=models.DO_NOTHING)
-    WH_Receiver_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING, related_name= 'WH_Sender_id')
-    WH_Sender_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING, related_name= 'WH_Receiver_id')
-    Transaction_id = models.ForeignKey(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True)
+    WH_Receiver_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING)
+    WH_Sender_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING)
+    Transaction_id = models.ForeignKey(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True, default= 0)
     
     def __str__(self):
         return '%s %s %s %s' % (self.Exec_id,  self.WH_Receiver_id, self.WH_Sender_id, self.Transaction_id)
@@ -173,7 +177,7 @@ class Drive(models.Model):
         return '%s %s' % (self.Vehicle_id,  self.Driver_id)
     
     class Meta:
-        unique_together = (('Vehicule_id', 'Driver_id'))
+        unique_together = (('Vehicle_id', 'Driver_id'))
    
  
 >>>>>>> 417b1af878bab7741b7c2502289aa472fa2fd22a
