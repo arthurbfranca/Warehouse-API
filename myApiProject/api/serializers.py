@@ -11,3 +11,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Employee
         fields = '__all__'
+
+class WarehouseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Warehouse
+        fields = '__all__'
