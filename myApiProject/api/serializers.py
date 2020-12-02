@@ -16,3 +16,14 @@ class RouteSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = models.RouteList
 		fields = '__all__'
+
+class WarehouseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Warehouse
+        fields = '__all__'
+
+class ItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Item
+        fields = '__all__'
+
