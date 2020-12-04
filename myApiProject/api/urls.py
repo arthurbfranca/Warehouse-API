@@ -7,4 +7,5 @@ urlpatterns = [
 	path('routes/', views.RouteList.as_view()),
 	path('warehouses/', views.WarehouseList.as_view()),
     path('items/', views.ItemList.as_view()),
+    path('worksat/', views.WorksList.as_view()),
 ]
