@@ -95,3 +95,18 @@ class RouteList (APIView):
 			serializer.save ()
 			return Response (serializer.data, status=status.HTTP_201_CREATED)
 		return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#Works at
+class WorksList (APIView):
+    def get(self, request, format=None):
+	    worksat = Works_At.objects.all()
+	    serializer = RouteSerializer (worksat, many=True)
+	    return Response(serializer.data)
+    
+    def post(self, request, format=None):
+	    serializer = WorksSerializer (data=request.data)
+	    if serializer.is_valid ():
+	    	serializer.save ()
+	    	return Response (serializer.data, status=status.HTTP_201_CREATED)
+	    return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
