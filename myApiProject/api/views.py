@@ -87,3 +87,10 @@ class RouteList (APIView):
 		routes = Route.objects.all()
 		serializer = RouteSerializer (routes, many=True)
 		return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = RouteSerializer (data=request.data)
+        if serializer.is_valid ( ):
+            serializer.save ( )
+            return Response (serializer.data, status=status.HTTP_201_CREATED)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
