@@ -40,12 +40,14 @@ class UserDetail (APIView):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+# View all Drivers
 class DriverList (APIView):
     def get(self, request, format=None):
 	    driver = Employee.objects.filter(role='driver')
 	    serializer = EmployeeSerializer (driver, many=True)
 	    return Response(serializer.data)
 
+# View individual drivers
 class DriverDetail (APIView):
 
     def get(self, request, pk, format=None):
@@ -107,7 +109,6 @@ class EmployeeDetail (APIView):
 
 
 # View all Warehouses
->>>>>>> refs/remotes/origin/main
 class WarehouseList (APIView):
     def get(self, request, format=None):
         whs = Warehouse.objects.all()
