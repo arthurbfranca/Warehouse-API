@@ -53,6 +53,28 @@ class CustomerList (APIView):
             serializer.save ( )
             return Response (serializer.data, status=status.HTTP_201_CREATED)
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class CustomerDetail (APIView):
+
+    def get(self, request, pk, format=None):
+        c = Customer.objects.get (pk=pk)
+        serializer = CustomerSerializer(c)
+        return Response (serializer.data)
+
+    def put(self, request, pk, format=None):
+        c = Customer.objects.filter(pk=pk).first()
+        serializer = CustomerSerializer(c, data=request.data)
+        print(c)
+        if serializer.is_valid ( ):
+            print(request.data)
+            serializer.save()
+            return Response (serializer.data)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        c = Customer.objects.filter (pk=pk)
+        c.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # View all Drivers
