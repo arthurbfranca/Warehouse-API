@@ -31,3 +31,8 @@ class WorksSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Works_At
         fields = '__all__'
+
+class ShipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Ship
+        fields = '__all__'
