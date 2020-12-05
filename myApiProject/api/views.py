@@ -158,6 +158,28 @@ class ItemList (APIView):
             return Response (serializer.data, status=status.HTTP_201_CREATED)
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# View specific items
+class ItemDetail (APIView):
+	def get(self, request, pk, format=None):
+		item = Item.objects.filter(pk=pk)
+		serializer = ItemSerializer(item, many=True)
+		return Response(serializer.data)
+		
+	def put(self, request, pk, format=None):
+		item = Item.objects.filter(pk=pk).first()
+		serializer = ItemSerializer(item, data=request.data)
+		print(item)
+		if serializer.is_valid ( ):
+			print(request.data)
+			serializer.save()
+			return Response (serializer.data)
+		return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		
+	def delete(self, request, pk, format=None):
+		item = Item.objects.filter (pk=pk)
+		item.delete()
+		return Response(status=status.HTTP_204_NO_CONTENT)
+
 # View all Routes
 class RouteList (APIView):
     def get(self, request, format=None):
