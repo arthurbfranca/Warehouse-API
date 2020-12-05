@@ -40,6 +40,12 @@ class UserDetail (APIView):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class DriverList (APIView):
+    def get(self, request, format=None):
+	    driver = Employee.objects.filter(role='driver')
+	    serializer = EmployeeSerializer (driver, many=True)
+	    return Response(serializer.data)
+
 
 class EmployeeList (APIView):
     def get(self, request, format=None):
@@ -75,7 +81,6 @@ class EmployeeDetail (APIView):
         emp = Employee.objects.filter (pk=pk)
         emp.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 class WarehouseList (APIView):
     def get(self, request, format=None):
