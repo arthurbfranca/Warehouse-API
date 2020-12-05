@@ -54,6 +54,7 @@ class CustomerList (APIView):
             return Response (serializer.data, status=status.HTTP_201_CREATED)
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
+#View the information of a given customer, edit his info, and delete him from db.
 class CustomerDetail (APIView):
 
     def get(self, request, pk, format=None):
@@ -65,7 +66,7 @@ class CustomerDetail (APIView):
         c = Customer.objects.filter(pk=pk).first()
         serializer = CustomerSerializer(c, data=request.data)
         print(c)
-        if serializer.is_valid ( ):
+        if serializer.is_valid ( ) and c.Cid == request.data["Cid"]:
             print(request.data)
             serializer.save()
             return Response (serializer.data)
