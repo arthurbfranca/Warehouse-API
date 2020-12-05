@@ -40,7 +40,35 @@ class UserDetail (APIView):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# View all employees
+class DriverList (APIView):
+    def get(self, request, format=None):
+	    driver = Employee.objects.filter(role='driver')
+	    serializer = EmployeeSerializer (driver, many=True)
+	    return Response(serializer.data)
+
+class DriverDetail (APIView):
+
+    def get(self, request, pk, format=None):
+        emp = Employee.objects.get (pk=pk)
+        serializer = EmployeeSerializer(emp)
+        return Response (serializer.data)
+
+    def put(self, request, pk, format=None):
+        emp = Employee.objects.filter(pk=pk).first()
+        serializer = EmployeeSerializer(emp, data=request.data)
+        print(emp)
+        if serializer.is_valid ( ):
+            print(request.data)
+            serializer.save()
+            return Response (serializer.data)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        emp = Employee.objects.filter (pk=pk)
+        emp.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# View all Employees
 class EmployeeList (APIView):
     def get(self, request, format=None):
         emps = Employee.objects.all()
@@ -77,7 +105,9 @@ class EmployeeDetail (APIView):
         emp.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 # View all Warehouses
+>>>>>>> refs/remotes/origin/main
 class WarehouseList (APIView):
     def get(self, request, format=None):
         whs = Warehouse.objects.all()
