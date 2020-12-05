@@ -194,7 +194,29 @@ class RouteList (APIView):
             return Response (serializer.data,status=status.HTTP_201_CREATED)
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#View Works at
+# View a specific route
+class RouteDetail (APIView):
+	def get(self, request, pk, format=None):
+		route = Route.objects.filter(pk=pk)
+		serializer = RouteSerializer(route, many=True)
+		return Response(serializer.data)
+		
+	def put(self, request, pk, format=None):
+		route = Route.objects.filter(pk=pk).first()
+		serializer = RouteSerializer(route, data=request.data)
+		print(route)
+		if serializer.is_valid ( ):
+			print(request.data)
+			serializer.save()
+			return Response (serializer.data)
+		return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		
+	def delete(self, request, pk, format=None):
+		route = Route.objects.filter (pk=pk)
+		route.delete()
+		return Response(status=status.HTTP_204_NO_CONTENT)
+		
+# View Works at
 class WorksList (APIView):
     def get(self, request, format=None):
 	    worksat = Works_At.objects.all()

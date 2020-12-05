@@ -8,6 +8,7 @@ urlpatterns = [
     path('drivers/', views.DriverList.as_view()),
     path('drivers/<int:pk>', views.DriverDetail.as_view()),
 	path('routes/', views.RouteList.as_view()),
+	path('routes/<int:pk>', views.RouteDetail.as_view()),
 	path('warehouses/', views.WarehouseList.as_view()),
 	path('warehouses/<int:pk>', views.WarehouseDetail.as_view()),
     path('items/', views.ItemList.as_view()),

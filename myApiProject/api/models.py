@@ -66,10 +66,10 @@ class Works_At(models.Model):
 
 class Route(models.Model):
     Route_id = models.IntegerField(primary_key=True,serialize= True)
-    Path = models.CharField(max_length= 200)
+    path = models.CharField(max_length= 200)
     
     def __str__(self):
-        return '%s %s' % (self.Route_id,  self.Path)
+        return '%s %s' % (self.Route_id,  self.path)
 
     
 class Transaction(models.Model):
