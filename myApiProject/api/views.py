@@ -257,3 +257,39 @@ class ShipList (APIView):
 	    	serializer.save ()
 	    	return Response (serializer.data, status=status.HTTP_201_CREATED)
 	    return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TransactionList (APIView):
+    def get(self, request, format=None):
+        transactions = Transaction.objects.all()
+        serializer = TransactionSerializer (transactions, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = TransactionSerializer (data=request.data)
+        if serializer.is_valid ():
+            serializer.save ()
+            return Response (serializer.data, status=status.HTTP_201_CREATED)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+class TransactionDetail (APIView):
+    def get(self, request, pk, format=None):
+        transaction = Transaction.objects.filter(pk=pk)
+        serializer = TransactionSerializer(transaction, many=True)
+        return Response(serializer.data)
+		
+    def put(self, request, pk, format=None):
+        transaction = Transaction.objects.filter(pk=pk).first()
+        serializer = TransactionSerializer(transaction, data=request.data)
+        print(transaction)
+        if serializer.is_valid ( ):
+            print(request.data)
+            serializer.save()
+            return Response (serializer.data)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		
+    def delete(self, request, pk, format=None):
+        transaction = Transaction.objects.filter (pk=pk)
+        transaction.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
