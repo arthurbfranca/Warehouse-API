@@ -1,6 +1,10 @@
 from rest_framework import serializers
 from . import models
 
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Customer
+        fields = '__all__'
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,4 +34,9 @@ class RouteSerializer(serializers.ModelSerializer):
 class WorksSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Works_At
+        fields = '__all__'
+
+class ShipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Ship
         fields = '__all__'

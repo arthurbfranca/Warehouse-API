@@ -3,6 +3,7 @@ from . import views
 urlpatterns = [
     path('users/', views.UserList.as_view()),
     path('users/<int:pk>', views.UserDetail.as_view()),
+    path('customers/', views.CustomerList.as_view()),
     path('employees/', views.EmployeeList.as_view()),
     path('employees/<int:pk>', views.EmployeeDetail.as_view()),
     path('drivers/', views.DriverList.as_view()),
@@ -14,4 +15,5 @@ urlpatterns = [
     path('items/', views.ItemList.as_view()),
 	path('items/<int:pk>', views.ItemDetail.as_view()),
     path('worksat/', views.WorksList.as_view()),
+    path('shipments/', views.ShipList.as_view()),
 ]

@@ -18,10 +18,15 @@ class Employee(models.Model):
     Id = models.IntegerField(primary_key= True, serialize= True, default= 0)
     name = models.CharField(max_length= 50)
     address = models.CharField(max_length= 100)
-    role = models.CharField(max_length=100, default="Worker")
+    role = models.CharField(max_length=100, default="worker")
 
     def __str__(self):
         return '%s %s' % (self.name, self.role)
+    
+    class Meta:
+        constraints = [
+            models.CheckConstraint(check= models.Q(role__exact= 'worker') | models.Q(role__exact= 'admin') | models.Q(role__exact= 'driver') | models.Q(role__exact= 'exec') , name = "valid workers"),
+        ]
 
 
 
@@ -159,4 +164,3 @@ class Drive(models.Model):
     
     class Meta:
         unique_together = (('Vehicle_id', 'Driver_id'))
-   
