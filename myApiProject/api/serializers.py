@@ -5,6 +5,11 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Customer
         fields = '__all__'
+        
+class DriveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Drive
+        fields = '__all__'
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,4 +49,9 @@ class ShipSerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Transaction
+        fields = '__all__'
+        
+class VehicleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Vehicle
         fields = '__all__'

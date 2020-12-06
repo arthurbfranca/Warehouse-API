@@ -78,6 +78,21 @@ class CustomerDetail (APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# View all "Drive," linking a driver to a shipment
+class DriveList (APIView):
+    def get(self, request, format=None):
+        c = Drive.objects.all()
+        serializer = DriveSerializer (c, many=True)
+        return Response (serializer.data)
+
+    def post(self, request, format=None):
+        serializer = DriveSerializer (data=request.data)
+        if serializer.is_valid ( ):
+            serializer.save ( )
+            return Response (serializer.data, status=status.HTTP_201_CREATED)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 # View all Drivers
 class DriverList (APIView):
     def get(self, request, format=None):
@@ -89,24 +104,26 @@ class DriverList (APIView):
 class DriverDetail (APIView):
 
     def get(self, request, pk, format=None):
-        emp = Employee.objects.get (pk=pk)
+        emp = Employee.objects.get (Id=pk)
         serializer = EmployeeSerializer(emp)
         return Response (serializer.data)
 
-    def put(self, request, pk, format=None):
-        emp = Employee.objects.filter(pk=pk).first()
-        serializer = EmployeeSerializer(emp, data=request.data)
-        print(emp)
-        if serializer.is_valid ( ):
-            print(request.data)
-            serializer.save()
-            return Response (serializer.data)
-        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    #undone atm
     def delete(self, request, pk, format=None):
         emp = Employee.objects.filter (pk=pk)
         emp.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+# View a given driver's vehicle
+class DriverVehicle (APIView):
+
+    def get(self, request, pk, format=None):
+        drive = Drive.objects.get(Driver_id=pk)
+        serializer1 = DriveSerializer(drive)
+        key = serializer1.data["Vehicle_id"]
+        v = Vehicle.objects.get (Vehicle_id=key)
+        serializer2 = VehicleSerializer(v)
+        return Response (serializer2.data)
 
 # View all Employees/Add a new one
 class EmployeeList (APIView):
@@ -218,7 +235,7 @@ class ItemDetail (APIView):
 		item.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
-# View all Routes
+# View all Routes/add a new one
 class RouteList (APIView):
     def get(self, request, format=None):
         routes = Route.objects.all()
@@ -338,3 +355,18 @@ class TransactionDetail (APIView):
         transaction = Transaction.objects.filter (pk=pk)
         transaction.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+        
+        
+# View all Routes
+class VehicleList (APIView):
+    def get(self, request, format=None):
+        routes = Vehicle.objects.all()
+        serializer = VehicleSerializer (routes, many=True)
+        return Response(serializer.data);
+
+    def post(self, request, format=None):
+        serializer = VehicleSerializer (data=request.data)
+        if serializer.is_valid( ):
+            serializer.save()
+            return Response (serializer.data,status=status.HTTP_201_CREATED)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
