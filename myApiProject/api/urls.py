@@ -17,6 +17,7 @@ urlpatterns = [
 	path('items/<int:pk>', views.ItemDetail.as_view()),
     path('worksat/', views.WorksList.as_view()),
     path('shipments/', views.ShipList.as_view()),
+    path('shipments/<int:pk>', views.ShipDetail.as_view()),
     path('transactions/', views.TransactionList.as_view()),
     path('transactions/<int:pk>', views.TransactionDetail.as_view()),
 ]
