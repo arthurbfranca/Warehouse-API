@@ -20,4 +20,10 @@ urlpatterns = [
     path('shipments/<int:pk>', views.ShipDetail.as_view()),
     path('transactions/', views.TransactionList.as_view()),
     path('transactions/<int:pk>', views.TransactionDetail.as_view()),
+    path('requests/', views.RequestList.as_view()),
+    path('requests/<int:pk>', views.RequestDetail.as_view()),
+    path('transfers/', views.TransferList.as_view()),
+    path('transfers/<int:pk>', views.TransferDetail.as_view()),
+    path('issues/', views.IssueList.as_view()),
+    path('issues/<int:pk>', views.IssueDetail.as_view()),
 ]

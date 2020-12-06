@@ -45,3 +45,18 @@ class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Transaction
         fields = '__all__'
+        
+class TransferSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Transfer
+        fields = '__all__'
+
+class RequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Request
+        fields = '__all__'
+        
+class IssueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Issue
+        fields = '__all__'

@@ -338,3 +338,113 @@ class TransactionDetail (APIView):
         transaction = Transaction.objects.filter (pk=pk)
         transaction.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+class RequestList (APIView):
+    def get(self, request, format=None):
+        request = Request.objects.all()
+        serializer = RequestSerializer (request, many=True)
+        return Response (serializer.data)
+
+    def post(self, request, format=None):
+        serializer = RequestSerializer (data=request.data)
+        if serializer.is_valid ( ):
+            serializer.save ( )
+            return Response (serializer.data, status=status.HTTP_201_CREATED)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class RequestDetail (APIView):
+    def get(self, request, pk, format=None):
+        request = Request.objects.filter(pk=pk)
+        serializer = RequestSerializer(request, many=True)
+        return Response(serializer.data)
+		
+    def put(self, request, pk, format=None):
+        request = Request.objects.filter(pk=pk).first()
+        serializer = RequestSerializer(request, data=request.data)
+        print(request)
+        if serializer.is_valid ( ):
+            print(request.data)
+            serializer.save()
+            return Response (serializer.data)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		
+    def delete(self, request, pk, format=None):
+        request = Request.objects.filter (pk=pk)
+        request.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
+
+class TransferList (APIView):
+    def get(self, request, format=None):
+        transfer = Transfer.objects.all()
+        serializer = TransferSerializer (transfer, many=True)
+        return Response (serializer.data)
+
+    def post(self, request, format=None):
+        serializer = TransferSerializer (data=request.data)
+        if serializer.is_valid ( ):
+            serializer.save ( )
+            return Response (serializer.data, status=status.HTTP_201_CREATED)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class TransferDetail (APIView):
+    def get(self, request, pk, format=None):
+        transfer = Transfer.objects.filter(pk=pk)
+        serializer = TransferSerializer(transfer, many=True)
+        return Response(serializer.data)
+		
+    def put(self, request, pk, format=None):
+        id = Transfer.objects.get(Transaction_id = pk)
+        transfer = Transfer.objects.filter(pk=id).first()
+        serializer = TransferSerializer(transfer, data=request.data)
+        print(request)
+        if serializer.is_valid ( ):
+            print(request.data)
+            serializer.save()
+            return Response (serializer.data)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		
+    def delete(self, request, pk, format=None):
+        transfer = Transfer.objects.filter (pk=pk)
+        transfer.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+class IssueList (APIView):
+    def get(self, request, format=None):
+        transfer = Issue.objects.all()
+        serializer = IssueSerializer (transfer, many=True)
+        return Response (serializer.data)
+
+    def post(self, request, format=None):
+        serializer = IssueSerializer (data=request.data)
+        if serializer.is_valid ( ):
+            serializer.save ( )
+            return Response (serializer.data, status=status.HTTP_201_CREATED)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class IssueDetail (APIView):
+    def get(self, request, pk, format=None):
+        issue = Issue.objects.filter(pk=pk)
+        serializer = IssueSerializer(issue, many=True)
+        return Response(serializer.data)
+		
+    def put(self, request, pk, format=None):
+        issue = Issue.objects.filter(pk=pk).first()
+        serializer = IssueSerializer(issue, data=request.data)
+        print(request)
+        if serializer.is_valid ( ):
+            print(request.data)
+            serializer.save()
+            return Response (serializer.data)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		
+    def delete(self, request, pk, format=None):
+        issue = Issue.objects.filter (pk=pk)
+        issue.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
