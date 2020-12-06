@@ -8,7 +8,9 @@ urlpatterns = [
     path('employees/', views.EmployeeList.as_view()),
     path('employees/<int:pk>', views.EmployeeDetail.as_view()),
     path('drivers/', views.DriverList.as_view()),
+    path('drive/', views.DriveList.as_view()),
     path('drivers/<int:pk>', views.DriverDetail.as_view()),
+    path('drivers/<int:pk>/vehicle/', views.DriverVehicle.as_view()),
 	path('routes/', views.RouteList.as_view()),
 	path('routes/<int:pk>', views.RouteDetail.as_view()),
 	path('warehouses/', views.WarehouseList.as_view()),
@@ -20,4 +22,5 @@ urlpatterns = [
     path('shipments/<int:pk>', views.ShipDetail.as_view()),
     path('transactions/', views.TransactionList.as_view()),
     path('transactions/<int:pk>', views.TransactionDetail.as_view()),
+    path('vehicles/', views.VehicleList.as_view()),
 ]
