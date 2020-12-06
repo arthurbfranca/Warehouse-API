@@ -55,3 +55,13 @@ class VehicleSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Vehicle
         fields = '__all__'
+		
+class StoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Store
+        fields = '__all__'
+		
+class SubsectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Subsection
+        fields = '__all__'

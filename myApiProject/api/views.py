@@ -220,6 +220,63 @@ class WarehouseDetail (APIView):
 		whs.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
+class SubsectionList (APIView):
+    def get(self, request, format=None):
+        subsection = Subsection.objects.all()
+        serializer = SubsectionSerializer (subsection, many=True)
+        return Response (serializer.data)
+
+    def post(self, request, format=None):
+        serializer = SubsectionSerializer (data=request.data)
+        if serializer.is_valid ( ):
+            serializer.save ( )
+            return Response (serializer.data, status=status.HTTP_201_CREATED)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class SubsectionDetail (APIView):
+	def get(self, request, pk, format=None):
+		subsection = Subsection.objects.filter(pk=pk)
+		serializer = SubsectionSerializer(subsection, many=True)
+		return Response(serializer.data)
+		
+	def put(self, request, pk, format=None):
+		subsection = Subsection.objects.filter(pk=pk).first()
+		serializer = SubsectionSerializer(subsection, data=request.data)
+		print(subsection)
+		if serializer.is_valid ( ):
+			print(request.data)
+			serializer.save()
+			return Response (serializer.data)
+		return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		
+	def delete(self, request, pk, format=None):
+		subsection = Subsection.objects.filter (pk=pk)
+		subsection.delete()
+		return Response(status=status.HTTP_204_NO_CONTENT)
+		
+		
+# View specific items
+class StoreDetail (APIView):
+	def get(self, request, pk, format=None):
+		store = Store.objects.filter(pk=pk)
+		serializer = StoreSerializer(store, many=True)
+		return Response(serializer.data)
+		
+	def put(self, request, pk, format=None):
+		store = Store.objects.filter(pk=pk).first()
+		serializer = ItemSerializer(store, data=request.data)
+		print(store)
+		if serializer.is_valid ( ):
+			print(request.data)
+			serializer.save()
+			return Response (serializer.data)
+		return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		
+	def delete(self, request, pk, format=None):
+		store = Store.objects.filter (pk=pk)
+		store.delete()
+		return Response(status=status.HTTP_204_NO_CONTENT)
+		
 # View all Items
 class ItemList (APIView):
     def get(self, request, format=None):
@@ -256,6 +313,42 @@ class ItemDetail (APIView):
 		item.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
+# View Stores
+class StoreList (APIView):
+    def get(self, request, format=None):
+        store = Store.objects.all()
+        serializer = StoreSerializer (store, many=True)
+        return Response (serializer.data)
+
+    def post(self, request, format=None):
+        serializer = StoreSerializer (data=request.data)
+        if serializer.is_valid ( ):
+            serializer.save ( )
+            return Response (serializer.data, status=status.HTTP_201_CREATED)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# View specific items
+class StoreDetail (APIView):
+	def get(self, request, pk, format=None):
+		store = Store.objects.filter(pk=pk)
+		serializer = StoreSerializer(store, many=True)
+		return Response(serializer.data)
+		
+	def put(self, request, pk, format=None):
+		store = Store.objects.filter(pk=pk).first()
+		serializer = ItemSerializer(store, data=request.data)
+		print(store)
+		if serializer.is_valid ( ):
+			print(request.data)
+			serializer.save()
+			return Response (serializer.data)
+		return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		
+	def delete(self, request, pk, format=None):
+		store = Store.objects.filter (pk=pk)
+		store.delete()
+		return Response(status=status.HTTP_204_NO_CONTENT)
+		
 # View all Routes/add a new one
 class RouteList (APIView):
     def get(self, request, format=None):
@@ -269,7 +362,7 @@ class RouteList (APIView):
             serializer.save()
             return Response (serializer.data,status=status.HTTP_201_CREATED)
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+		
 # View a specific route
 class RouteDetail (APIView):
 	def get(self, request, pk, format=None):
