@@ -56,6 +56,11 @@ class Vehicle(models.Model):
 
     def __str__(self):
         return '%s %s' % (self.model, self.size)
+    
+    class Meta:
+        constraints = [
+            models.CheckConstraint(check= models.Q(size__exact= 'small') | models.Q(size__exact= 'medium') | models.Q(size__exact= 'large'), name = "valid sizes"),
+        ]
 
 
 class Works_At(models.Model):
