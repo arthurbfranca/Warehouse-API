@@ -125,6 +125,30 @@ class DriverVehicle (APIView):
         serializer2 = VehicleSerializer(v)
         return Response (serializer2.data)
 
+# View a given driver's shipments
+class DriverShipments (APIView):
+
+    def get(self, request, pk, format=None):
+        s = Ship.objects.get(Driver_id=pk)
+        serializer = ShipSerializer(s)
+        return Response (serializer.data)
+        
+# View specific shipment of a driver
+class DriverShipmentDetail (APIView):
+
+    def get(self, request, pk, item, cid, route, format=None):
+        emp = Ship.objects.get (Driver_id=pk,Item_id=item,Cid=cid,Route_id=route)
+        serializer = ShipSerializer(emp)
+        return Response (serializer.data)
+
+# View a given driver's transactions
+class DriverTransactions (APIView):
+
+    def get(self, request, pk, format=None):
+        s = Transaction.objects.get(Driver_id=pk)
+        serializer = TransactionSerializer(s)
+        return Response (serializer.data)
+
 # View all Employees/Add a new one
 class EmployeeList (APIView):
     def get(self, request, format=None):
