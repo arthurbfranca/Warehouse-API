@@ -140,14 +140,14 @@ class Store(models.Model):
         
 class Transfer(models.Model):
     Item_id = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
-    Transaction_id = models.ForeignKey(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True, default= 0)
+    Transaction_id = models.OneToOneField(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True)
     
     def __str__(self):
         return '%s %s' % (self.Transaction_id, self.Item_id)
     
 class Request(models.Model):
     Admin_id = models.ForeignKey(Employee, on_delete=models.DO_NOTHING)
-    Transaction_id = models.ForeignKey(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True, default= 0)
+    Transaction_id = models.OneToOneField(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True)
     
     def __str__(self):
         return '%s %s' % (self.Admin_id, self.Transaction_id)
@@ -155,7 +155,7 @@ class Request(models.Model):
 
 class Issue(models.Model):
     Exec_id = models.ForeignKey(Employee, on_delete=models.DO_NOTHING)
-    Transaction_id = models.ForeignKey(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True, default= 0)
+    Transaction_id = models.OneToOneField(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True)
     
     def __str__(self):
         return '%s %s' % (self.Exec_id, self.Transaction_id)
