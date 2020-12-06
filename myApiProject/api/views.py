@@ -85,7 +85,7 @@ class DriverList (APIView):
 	    serializer = EmployeeSerializer (driver, many=True)
 	    return Response(serializer.data)
 
-# View individual drivers
+# View individual drivers (DO WE NEED THIS)????????
 class DriverDetail (APIView):
 
     def get(self, request, pk, format=None):
@@ -107,7 +107,28 @@ class DriverDetail (APIView):
         emp = Employee.objects.filter (pk=pk)
         emp.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+		
+# View all Workers
+class WorkerList (APIView):
+    def get(self, request, format=None):
+	    worker = Employee.objects.filter(role='worker')
+	    serializer = EmployeeSerializer (worker, many=True)
+	    return Response(serializer.data)
 
+# View all Admins
+class AdminList (APIView):
+    def get(self, request, format=None):
+	    admin = Employee.objects.filter(role='admin')
+	    serializer = EmployeeSerializer (admin, many=True)
+	    return Response(serializer.data)
+	
+# View all executives	
+class ExecutiveList (APIView):
+    def get(self, request, format=None):
+	    executive = Employee.objects.filter(role='exec')
+	    serializer = EmployeeSerializer (executive, many=True)
+	    return Response(serializer.data)
+		
 # View all Employees/Add a new one
 class EmployeeList (APIView):
     def get(self, request, format=None):
