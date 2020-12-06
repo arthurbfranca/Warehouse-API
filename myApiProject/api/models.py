@@ -96,10 +96,10 @@ class Customer(models.Model):
         return '%s %s %s' % (self.Cid,  self.Caddress, self.Name)
 
 class Ship(models.Model):
-    Driver_id = models.ForeignKey(Employee, null= True, default= None, blank= True, on_delete=models.SET_NULL)
+    Driver_id = models.ForeignKey(Employee, on_delete=models.CASCADE, default=0)
     Item_id = models.ForeignKey(Item, on_delete=models.CASCADE ,serialize= True, default= 0)
     Cid = models.ForeignKey(Customer, on_delete=models.CASCADE, serialize= True, default= 0)
-    Route_id = models.ForeignKey(Route, null= True, default= None, blank = True, on_delete =models.SET_NULL)
+    Route_id = models.ForeignKey(Route, on_delete =models.CASCADE, default=0)
     Quantity = models.IntegerField(default=1)
     Status = models.BooleanField(default= False)    ##false is incomplete
     
@@ -107,7 +107,7 @@ class Ship(models.Model):
         return '%s %s %s %r' % (self.Item_id,  self.Cid, self.Quantity, self.Status)
 
     class Meta:
-        unique_together = (('Cid', 'Item_id'))
+        unique_together = (('Cid', 'Item_id','Driver_id','Route_id'))
 
 class Subsection(models.Model):
     Warehouse_id = models.ForeignKey(Warehouse, on_delete= models.CASCADE, serialize= True, default= 0)
