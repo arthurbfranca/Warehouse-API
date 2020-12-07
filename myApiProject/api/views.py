@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import *
 from .models import *
+from django.db.models import Sum
 
 class UserList (APIView):
     def get(self, request, format=None):
@@ -618,3 +619,19 @@ class VehicleList (APIView):
             serializer.save()
             return Response (serializer.data,status=status.HTTP_201_CREATED)
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+#worker subsections
+class WorkerSubsections (APIView):
+    def get(self, request, pk, format=None):
+        warehouseid = Works_At.objects.filter(Worker_id = pk).first().Warehouse_id
+        subsections = Subsection.objects.filter(Warehouse_id = warehouseid)
+        serializer = SubsectionSerializer(subsections, many = True)
+        return Response(serializer.data)
+
+#subsection worker items
+class WorkerItemDetail(APIView):
+    def get(self, request, pk, format = None):
+        warehouseid = Works_At.objects.filter(Worker_id = pk).first().Warehouse_id
+        stores = Store.objects.values('Item_id').annotate(Sum('Quantity'))  
+        return Response(stores, status=status.HTTP_204_NO_CONTENT)

@@ -36,4 +36,5 @@ urlpatterns = [
     path('issues/', views.IssueList.as_view()),
     path('issues/<int:pk>', views.IssueDetail.as_view()),
     path('vehicles/', views.VehicleList.as_view()),
+    path('employees/<int:pk>/worker', views.WorkerItemDetail.as_view())
 ]
