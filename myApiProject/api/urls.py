@@ -1,6 +1,9 @@
 from django.urls import path,include
 from . import views
 urlpatterns = [
+    path('admins/', views.AdminList.as_view()),
+    path('admins/<int:pk>', views.AdminDetail.as_view()),
+    path('admins/<int:pk>/workers/', views.AdminWorkers.as_view()),
     path('users/', views.UserList.as_view()),
     path('users/<int:pk>', views.UserDetail.as_view()),
     path('customers/', views.CustomerList.as_view()),
