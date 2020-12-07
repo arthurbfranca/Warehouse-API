@@ -81,3 +81,6 @@ class SubsectionSerializer(serializers.ModelSerializer):
         model = models.Subsection
         fields = '__all__'
 
+class ModifyStoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__Quantity__', '__Subsection_id__'

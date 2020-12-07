@@ -423,7 +423,7 @@ class RouteDetail (APIView):
 class WorksList (APIView):
     def get(self, request, format=None):
 	    worksat = Works_At.objects.all()
-	    serializer = RouteSerializer (worksat, many=True)
+	    serializer = WorksSerializer (worksat, many=True)
 	    return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -644,3 +644,24 @@ class WorkerItemDetail(APIView):
         warehouseid = Works_At.objects.filter(Worker_id = pk).first().Warehouse_id
         stores = Store.objects.filter(Warehouse_id = warehouseid).values('Item_id').annotate(Sum('Quantity'))  
         return Response(stores, status=status.HTTP_204_NO_CONTENT)
+    
+    
+    
+class WorkerSubsectionDetail (APIView):
+    def get(self, request, pk, subid, format= None):
+        warehouseid = Works_At.objects.filter(Worker_id = pk).first().Warehouse_id
+        stores = Store.objects.filter(Warehouse_id = warehouseid).filter(Subsection_name = subid) 
+        serializer = StoreSerializer(stores)
+        return Response(serializer.data)
+    
+    
+    def post(self, request, pk, subid, format = None):
+        warehouseid = Works_At.objects.filter(Worker_id = pk).first().Warehouse_id
+        store = Store.objects.filter(Warehouse_id = warehouseid).filter(Subsection_name = subid)
+        serializer = StoreSerializer(store, data=request.data)
+        print(store)
+        if serializer.is_valid ( ):
+            print(request.data)
+            serializer.save()
+            return Response (serializer.data)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
