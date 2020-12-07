@@ -15,7 +15,7 @@ class User(models.Model):
 
 
 class Employee(models.Model):
-    Id = models.IntegerField(primary_key= True, serialize= True, default= 0)
+    Id = models.IntegerField(primary_key= True, serialize= True, default= 0, auto_created=True)
     name = models.CharField(max_length= 50)
     address = models.CharField(max_length= 100)
     role = models.CharField(max_length=100, default="worker")
@@ -83,7 +83,7 @@ class Route(models.Model):
 
     
 class Transaction(models.Model):
-    Transaction_id = models.IntegerField(primary_key= True, serialize= True , default= 0)
+    Transaction_id = models.IntegerField(primary_key= True, serialize= True , default= 0, auto_created= True)
     WH_Receiver_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING, related_name= 'WH_Sender_id')
     WH_Sender_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING, related_name= 'WH_Receiver_id')
     Driver_id = models.ForeignKey(Employee, null=True, on_delete=models.SET_NULL, blank = True)
@@ -141,6 +141,7 @@ class Store(models.Model):
 class Transfer(models.Model):
     Item_id = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
     Transaction_id = models.OneToOneField(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True)
+    Quantity = models.IntegerField(default=1)
     
     def __str__(self):
         return '%s %s' % (self.Transaction_id, self.Item_id)
