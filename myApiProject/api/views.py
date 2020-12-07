@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from .serializers import *
 from .models import *
 from django.db.models import Sum
+from django.db.models import Max
 
 class UserList (APIView):
     def get(self, request, format=None):
@@ -340,8 +341,6 @@ class StoreDetail (APIView):
 # View all Items and their quantities
 class ItemList (APIView):
     def get(self, request, format=None):
-        items = Item.objects.all()
-        stores = Store.objects.all()
         stores =  Store.objects.values('Item_id').annotate(Sum('Quantity'))
         for s in stores:
             item = Item.objects.get(Item_id=s["Item_id"])
@@ -699,3 +698,52 @@ class WorkerSubsectionDetail (APIView):
         store = Store.objects.get(Warehouse_id = warehouseid, Subsection_name = subid, Item_id = itemid)
         store.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
+
+class AdminViewTransactionRequests(APIView):
+    def get(self, requests, pk,format = None):
+        warehouseid = Warehouse.objects.get(admin_id = pk)
+        transactions = Transaction.objects.filter(WH_Receiver_id = warehouseid)
+        serializer = TransactionSerializer(transactions, many = True)
+        return Response(serializer.data)
+    
+class AdminTransactions(APIView):
+    def get(self, requests, pk, wid, iid,format = None):
+        warehouseid = Warehouse.objects.get(admin_id = pk)
+        transactions = Transaction.objects.filter(WH_Receiver_id = warehouseid)
+        serializer = TransactionSerializer(transactions, many = True)
+        return Response(serializer.data)
+    
+    
+    def post(self, requests, pk, wid, iid,format = None):
+        warehouseid = Warehouse.objects.get(admin_id = pk)
+        num = Transaction.objects.aggregate(Max('Transaction_id'))['Transaction_id__max']
+        num = num + 1
+        transaction = Transaction(Transaction_id=num)
+        transaction.WH_Receiver_id = warehouseid
+        transaction.WH_Sender_id =Warehouse.objects.get(Warehouse_id=wid)
+        requesting = Request(pk, transaction.Transaction_id)
+        transfer = Transfer(Item_id = Item.objects.get(Item_id=iid), Transaction_id = transaction)
+        if(isinstance(requests.data, int)) :
+            transfer.Quantity = requests.data
+        transaction.save()
+        requesting.save()
+        transfer.save()
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
+    def put(self, requests, pk, wid, iid,format = None):
+        tid = requests.data["Transaction_id"]
+        rid = requests.data["Route_id"]
+        did = requests.data["Driver_id"]
+        if(Employee.objects.get(Id = did).role == 'driver'):
+            transaction= Transaction.objects.get(Transaction_id = tid)
+            transaction.Route_id = Route.objects.get(Route_id= rid)
+            transaction.Driver_id = Employee.objects.get(Id = did)
+            transaction.save()
+            serializer = TransactionSerializer(transaction)
+            return Response(serializer.data,status = status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+        
