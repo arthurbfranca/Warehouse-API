@@ -642,5 +642,5 @@ class WorkerSubsections (APIView):
 class WorkerItemDetail(APIView):
     def get(self, request, pk, format = None):
         warehouseid = Works_At.objects.filter(Worker_id = pk).first().Warehouse_id
-        stores = Store.objects.values('Item_id').annotate(Sum('Quantity'))  
+        stores = Store.objects.filter(Warehouse_id = warehouseid).values('Item_id').annotate(Sum('Quantity'))  
         return Response(stores, status=status.HTTP_204_NO_CONTENT)
