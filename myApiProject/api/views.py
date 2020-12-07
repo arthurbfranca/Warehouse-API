@@ -158,8 +158,17 @@ class DriverShipments (APIView):
 class DriverShipmentDetail (APIView):
 
     def get(self, request, pk, item, cid, route, format=None):
-        emp = Ship.objects.get (Driver_id=pk,Item_id=item,Cid=cid,Route_id=route)
-        serializer = ShipSerializer(emp)
+        s = Ship.objects.get (Driver_id=pk,Item_id=item,Cid=cid,Route_id=route)
+        serializer = ShipSerializer(s)
+        return Response (serializer.data)
+        
+    def put(self, request, pk, item, cid, route, format=None):
+        s = Ship.objects.get (Driver_id=pk,Item_id=item,Cid=cid,Route_id=route)
+        if(request.data == "True" or request.data == "true" or request.data == True):
+            s.Status = True
+        if(request.data == "False" or request.data == "false"):
+            s.Status = False  
+        serializer = ShipSerializer(s)
         return Response (serializer.data)
 
 # View a given driver's transactions
