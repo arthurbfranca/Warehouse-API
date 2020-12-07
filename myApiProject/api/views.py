@@ -311,12 +311,18 @@ class StoreDetail (APIView):
 		store.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 		
-# View all Items
+# View all Items and their quantities
 class ItemList (APIView):
     def get(self, request, format=None):
         items = Item.objects.all()
-        serializer = ItemSerializer (items, many=True)
-        return Response (serializer.data)
+        stores = Store.objects.all()
+        stores =  Store.objects.values('Item_id').annotate(Sum('Quantity'))
+        for s in stores:
+            item = Item.objects.get(Item_id=s["Item_id"])
+            s["Name"] = item.Name
+            s["Price"] = item.Price
+            s["Dimensions"] = item.Dimensions
+        return Response(stores)
 
     def post(self, request, format=None):
         serializer = ItemSerializer (data=request.data)
