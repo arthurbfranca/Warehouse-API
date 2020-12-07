@@ -694,3 +694,8 @@ class WorkerSubsectionDetail (APIView):
         serializer = StoreSerializer(store)
         return Response (serializer.data)
     
+    def delete(self, request, pk, subid, itemid, format=None):
+        warehouseid = Works_At.objects.get(Worker_id = pk).Warehouse_id
+        store = Store.objects.get(Warehouse_id = warehouseid, Subsection_name = subid, Item_id = itemid)
+        store.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
