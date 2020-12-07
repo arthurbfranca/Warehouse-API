@@ -38,5 +38,5 @@ urlpatterns = [
     path('vehicles/', views.VehicleList.as_view()),
     path('employees/<int:pk>/worker', views.WorkerItemDetail.as_view()),
     path('employees/<int:pk>/worker/subsection', views.WorkerSubsections.as_view()),
-    path('employees/<int:pk>/worker/subsection/<int:subid>', views.WorkerSubsectionDetail.as_view()),
+    path('employees/<int:pk>/worker/subsection/<int:subid>/<int:itemid>', views.WorkerSubsectionDetail.as_view()),
 ]
