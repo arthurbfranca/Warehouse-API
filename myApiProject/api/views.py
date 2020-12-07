@@ -110,7 +110,6 @@ class DriverDetail (APIView):
         serializer = EmployeeSerializer(emp)
         return Response (serializer.data)
 
-    #undone atm
     def delete(self, request, pk, format=None):
         emp = Employee.objects.filter (pk=pk)
         emp.delete()
@@ -130,6 +129,33 @@ class AdminList (APIView):
 	    serializer = EmployeeSerializer (admin, many=True)
 	    return Response(serializer.data)
 	
+#View individual admins
+class AdminDetail (APIView):
+    def get(self, request, pk, format=None):
+        emp = Employee.objects.get (Id=pk,role='admin')
+        serializer = EmployeeSerializer(emp)
+        return Response (serializer.data)
+
+    def delete(self, request, pk, format=None):
+        emp = Employee.objects.filter (pk=pk)
+        emp.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+#Admins workers
+class AdminWorkers (APIView):
+    def get(self, request, pk, format=None):
+        wh = Warehouse.objects.get(admin_id=pk)
+        works_at = Works_At.objects.filter(Warehouse_id=wh.Warehouse_id)
+        workers = Employee.objects.filter(role='worker')
+        l = []
+        for wa in works_at:
+            serializer1 = WorksSerializer(wa)
+            key = serializer1.data["Worker_id"]
+            w = Employee.objects.get(Id=key)
+            l.append(w)
+        serializer = EmployeeSerializer (l, many=True)
+        return Response(serializer.data)
+  
 # View all executives	
 class ExecutiveList (APIView):
     def get(self, request, format=None):
