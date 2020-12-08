@@ -893,6 +893,45 @@ class ExecItemDetails(APIView):
         item = Item.objects.get(Item_id = iid)
         item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-        
-        
     
+    
+class ExecViewTransactions(APIView):
+    def get(self, requests,pk,format = None):
+        transactions = Transaction.objects.all()
+        serializer = TransactionSerializer(transactions, many=True)
+        return Response(serializer.data , status=status.HTTP_200_OK)
+        
+        
+class ExecViewRequests(APIView):
+    def get(self, requests,pk,format = None):
+        req = Requests.objects.all()
+        serializer = RequestSerializer(req, many= True)
+        return Response(serializer.data , status=status.HTTP_200_OK)
+    
+
+class ExecHandleRequests(APIView):
+    ##inputs transaction id (of an existing request) , bool : True (accept request) or False (decline request)
+    def put(self, requests,pk,format = None):
+        try:
+            req = Requests.objects.get(Transaction_id = requests.data["Transaction_id"])
+            if(requests.data["bool"] == True or requests.data["bool"] == "true" or requests.data["bool"] == "True"):
+                transaction = Transaction.objects.get(Transaction_id = requests.data["Transaction_id"])
+                issue = Issue.objects.create(Transaction_id = transaction, Exec_id = Employee.objects.get(Id = pk))
+                req.delete()
+                Response (status=status.HTTP_200_OK)
+            else :
+                transaction = Transaction.objects.get(Transaction_id = requests.data["Transaction_id"])
+                transaction.delete()
+                Response (status=status.HTTP_200_OK)
+        except Request.DoesNotExist :
+            return Response (status=status.HTTP_400_BAD_REQUEST)
+        
+    def get(self, requests,pk,format = None):
+        transaction = Transaction.objects.all()
+        serializer = TransactionSerializer( transaction, many = True)
+        return Response(serializer.data , status=status.HTTP_200_OK)
+    
+    
+                
+                
+        

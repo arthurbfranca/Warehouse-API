@@ -53,4 +53,8 @@ urlpatterns = [
     path('employees/<int:pk>/exec/warehouses/<int:wid>', views.ExecViewWarehousDetail.as_view()),
     path('employees/<int:pk>/exec/items/', views.ExecViewItems.as_view()),
     path('employees/<int:pk>/exec/items/<int:iid>', views.ExecItemDetails.as_view()),
+    path('employees/<int:pk>/exec/transactions/', views.ExecViewTransactions.as_view()),
+    path('employees/<int:pk>/exec/items/<int:iid>', views.ExecItemDetails.as_view()),
+    path('employees/<int:pk>/exec/requests/', views.ExecViewRequests.as_view()),
+    path('employees/<int:pk>/exec/requests/handle', views.ExecHandleRequests.as_view()),
 ]
