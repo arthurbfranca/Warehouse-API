@@ -904,7 +904,7 @@ class ExecViewTransactions(APIView):
         
 class ExecViewRequests(APIView):
     def get(self, requests,pk,format = None):
-        req = Requests.objects.all()
+        req = Request.objects.all()
         serializer = RequestSerializer(req, many= True)
         return Response(serializer.data , status=status.HTTP_200_OK)
     
@@ -913,24 +913,49 @@ class ExecHandleRequests(APIView):
     ##inputs transaction id (of an existing request) , bool : True (accept request) or False (decline request)
     def put(self, requests,pk,format = None):
         try:
-            req = Requests.objects.get(Transaction_id = requests.data["Transaction_id"])
+            req = Request.objects.get(Transaction_id = requests.data["Transaction_id"])
             if(requests.data["bool"] == True or requests.data["bool"] == "true" or requests.data["bool"] == "True"):
                 transaction = Transaction.objects.get(Transaction_id = requests.data["Transaction_id"])
                 issue = Issue.objects.create(Transaction_id = transaction, Exec_id = Employee.objects.get(Id = pk))
                 req.delete()
-                Response (status=status.HTTP_200_OK)
+                Response(status=status.HTTP_200_OK)
             else :
                 transaction = Transaction.objects.get(Transaction_id = requests.data["Transaction_id"])
                 transaction.delete()
-                Response (status=status.HTTP_200_OK)
+                Response(status=status.HTTP_200_OK)
         except Request.DoesNotExist :
-            return Response (status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         
+    #get all the transactions
     def get(self, requests,pk,format = None):
         transaction = Transaction.objects.all()
         serializer = TransactionSerializer( transaction, many = True)
         return Response(serializer.data , status=status.HTTP_200_OK)
     
+    #create an Issue all all that other stuff that goes with it
+    #needs 
+    # WH_Receiver_id
+    # WH_Sender_id
+    # Item_id
+    # Quantity 
+    def post(self, requests,pk,format = None):
+        rec = requests.data["WH_Receiver_id"]
+        sen = requests.data["WH_Sender_id"]
+        item = requests.data["Item_id"]
+        quantity = requests.data["Quantity"]
+        exe = Employee.objects.get(Id = pk)
+        warehouseidr = Warehouse.objects.get(Warehouse_id = rec)
+        warehouseids = Warehouse.objects.get(Warehouse_id = sen)
+        item = Item.objects.get(Item_id = item)
+        
+        num = Transaction.objects.aggregate(Max('Transaction_id'))['Transaction_id__max']
+        num = num + 1
+        
+        transaction = Transaction.objects.create(Transaction_id = num, WH_Receiver_id = warehouseidr, WH_Sender_id = warehouseids)
+        transfer = Transfer.objects.create(Item_id = item, Transaction_id = transaction, Quantity = quantity)
+        issue = Issue.objects.create(Exec_id = exe, Transaction_id = transaction)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     
                 
                 
