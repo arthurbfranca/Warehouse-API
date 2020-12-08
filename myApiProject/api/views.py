@@ -862,3 +862,37 @@ class ExecViewWarehousDetail(APIView):
         whs = Warehouse.objects.filter(Warehouse_id = wid)
         whs.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class ExecViewItems(APIView):
+    #view items and their quantity in every warehouse separetly
+    def get(self, requests,pk,format = None):
+        stores = Store.objects.all().values('Item_id',"Warehouse_Id").annotate(Sum('Quantity'))  
+        return Response(stores, status=status.HTTP_200_OK)
+
+class ExecItemDetails(APIView):
+    ##makes a new item
+    def post(self,requests,pk, iid,format=None):
+        serializer = ItemSerializer (data=request.data)
+        if serializer.is_valid ( ):
+            serializer.save ( )
+            return Response (serializer.data, status=status.HTTP_201_CREATED)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+    
+    #edits an exisiting item
+    def put(self,request,pk,iid,format=None):
+        item = Item.objects.get(Item_id = iid)
+        serializer = ItemSerializer(item, data=request.data)
+        if serializer.is_valid ( ):
+            print(request.data)
+            serializer.save()
+            return Response (serializer.data)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    #deletes item (should delete the stores containing them)
+    def delete(self,request,pk,iid,format=None):
+        item = Item.objects.get(Item_id = iid)
+        item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
+        
+    
