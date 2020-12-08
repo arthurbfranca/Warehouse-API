@@ -253,7 +253,8 @@ class WarehouseList (APIView):
 
     def post(self, request, format=None):
         serializer = WarehouseSerializer (data=request.data)
-        if serializer.is_valid ( ):
+        
+        if serializer.is_valid ( ) and Employee.objects.filter(Id = request.data["admin_id"], role = 'admin').exists() :
             serializer.save ( )
             return Response (serializer.data, status=status.HTTP_201_CREATED)
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -869,11 +870,11 @@ class ExecHandleRequests(APIView):
                 transaction = Transaction.objects.get(Transaction_id = requests.data["Transaction_id"])
                 issue = Issue.objects.create(Transaction_id = transaction, Exec_id = Employee.objects.get(Id = pk))
                 req.delete()
-                Response(status=status.HTTP_200_OK)
+                return Response(status=status.HTTP_200_OK)
             else :
                 transaction = Transaction.objects.get(Transaction_id = requests.data["Transaction_id"])
                 transaction.delete()
-                Response(status=status.HTTP_200_OK)
+                return Response(status=status.HTTP_200_OK)
         except Request.DoesNotExist :
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
