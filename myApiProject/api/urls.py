@@ -43,5 +43,8 @@ urlpatterns = [
     path('employees/<int:pk>/worker/subsection', views.WorkerSubsections.as_view()),
     path('employees/<int:pk>/worker/subsection/<int:subid>/<int:itemid>', views.WorkerSubsectionDetail.as_view()),
     path('employees/<int:pk>/admin', views.AdminViewTransactionRequests.as_view()),
+    path('employees/<int:pk>/admin/items', views.AdminItemsWarehouse.as_view()),
+    path('employees/<int:pk>/admin/subsections', views.AdminSubsectionDetails.as_view()),
+    path('employees/<int:pk>/admin/subsections/stores', views.AdminSubsectionItems.as_view()),
     path('employees/<int:pk>/admin/<int:wid>/<int:iid>', views.AdminTransactions.as_view()),
 ]

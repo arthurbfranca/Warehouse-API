@@ -695,6 +695,7 @@ class WorkerSubsectionDetail (APIView):
         serializer = StoreSerializer(store)
         return Response (serializer.data)
     
+    #Delete a store (removes all of the specified item from the subsection)
     def delete(self, request, pk, subid, itemid, format=None):
         warehouseid = Works_At.objects.get(Worker_id = pk).Warehouse_id
         store = Store.objects.get(Warehouse_id = warehouseid, Subsection_name = subid, Item_id = itemid)
@@ -702,7 +703,7 @@ class WorkerSubsectionDetail (APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
     
-
+#View all transactions where admin is receiving (requested)
 class AdminViewTransactionRequests(APIView):
     def get(self, requests, pk,format = None):
         warehouseid = Warehouse.objects.get(admin_id = pk)
@@ -710,6 +711,7 @@ class AdminViewTransactionRequests(APIView):
         serializer = TransactionSerializer(transactions, many = True)
         return Response(serializer.data)
     
+#View all transactions where admin is receiving (requested) again
 class AdminTransactions(APIView):
     def get(self, requests, pk, wid, iid,format = None):
         warehouseid = Warehouse.objects.get(admin_id = pk)
@@ -718,6 +720,7 @@ class AdminTransactions(APIView):
         return Response(serializer.data)
     
     
+    #make transaction request and all that good stuff
     def post(self, requests, pk, wid, iid,format = None):
         warehouseid = Warehouse.objects.get(admin_id = pk)
         num = Transaction.objects.aggregate(Max('Transaction_id'))['Transaction_id__max']
@@ -736,6 +739,7 @@ class AdminTransactions(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
     
+    #Adds a route and a driver to a transaction
     def put(self, requests, pk, wid, iid,format = None):
         tid = requests.data["Transaction_id"]
         rid = requests.data["Route_id"]
@@ -748,4 +752,69 @@ class AdminTransactions(APIView):
             serializer = TransactionSerializer(transaction)
             return Response(serializer.data,status = status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+
+
+class AdminItemsWarehouse(APIView) :
+    #get all items and their quantity in the warehouse
+    def get(self, request, pk, format = None):
+        warehouseid = Warehouse.objects.get(admin_id = pk ).Warehouse_id
+        stores = Store.objects.filter(Warehouse_id = warehouseid).values('Item_id').annotate(Sum('Quantity'))  
+        return Response(stores, status=status.HTTP_200_OK)
+    
+
+class AdminSubsectionDetails(APIView):
+    #view subsections (does not show item quantites)
+    def get(self, request, pk, format = None):
+        warehouseid = Warehouse.objects.get(admin_id = pk ).Warehouse_id
+        subsections = Subsection.objects.filter(Warehouse_id = warehouseid)
+        serializer = SubsectionSerializer(subsections, many = True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    #create subsection or modify it if it exists (needs name and space)
+    def put(self,request,pk,format = None):
+        warehouseid = Warehouse.objects.get(admin_id = pk )
+        subid = request.data["Name"]
+        try:
+            subsection = Subsection.objects.get(Warehouse_id = warehouseid, Name = subid)
+            subsection.Name= subid
+            subsection.Total_space = request.data["Space"]
+            subsection.save()
+            serializer = SubsectionSerializer(subsection)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Subsection.DoesNotExist:
+            subsection = Subsection.objects.create(Warehouse_id = warehouseid, Name = subid)
+            subsection.Total_space = request.data["Space"]
+            subsection.save()
+            serializer = SubsectionSerializer(subsection)
+            return Response(serializer.data , status = status.HTTP_200_OK)
+    
+    #add a store containing an item to a subsection 
+    def post(self,request,pk,format = None):
+        #serializer = StoreSerializer (data=request.data)
+        warehouseid = Warehouse.objects.get(admin_id = pk )
+        itemid = request.data["Item_id"]
+        name = request.data["Name"]
+        quantity = request.data["Quantity"]
+        subsection = Subsection.objects.get(Warehouse_id = warehouseid.Warehouse_id, Name = name)
+        store = Store.objects.create(Warehouse_id = warehouseid, Item_id = Item.objects.get(Item_id = itemid), Subsection_name = subsection, Quantity = quantity)
+        return Response (status= status.HTTP_200_OK)
+    
+    #delete a subsection
+    def delete(self,request,pk,format = None):
+        warehouseid = Warehouse.objects.get(admin_id = pk)
+        subid = request.data["Name"]
+        subsection = Subsection.objects.get(Warehouse_id = warehouseid.Warehouse_id, Name = subid)
+        subsection.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
+            
+class AdminSubsectionItems(APIView):     
+    #get all the stores
+    def get(self,request,pk,format = None):
+        warehouseid = Warehouse.objects.get(admin_id = pk ).Warehouse_id
+        store = Store.objects.filter(Warehouse_id = warehouseid)
+        serializer = StoreSerializer(store, many = True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+            
         
