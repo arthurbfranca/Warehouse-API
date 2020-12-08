@@ -834,4 +834,31 @@ class AdminSubsectionItems(APIView):
         serializer = StoreSerializer(store, many = True)
         return Response(serializer.data, status=status.HTTP_200_OK)
             
-        
+
+class ExecViewWarehouses(APIView):
+    #view all the warehouses
+    def get(self,request,pk,format = None):
+        whs = Warehouse.objects.all()
+        serializer = WarehouseSerializer (whs, many=True)
+        return Response (serializer.data)
+    
+class ExecViewWarehousDetail(APIView):
+    def get(self, request, pk, wid, format=None):
+        whs = Warehouse.objects.filter(Warehouse_id = wid)
+        serializer = WarehouseSerializer(whs, many=True)
+        return Response(serializer.data)
+		
+    def put(self, request, pk, wid, format=None):
+        whs = Warehouse.objects.filter(Warehouse_id = wid).first()
+        serializer = WarehouseSerializer(whs, data=request.data)
+        print(whs)
+        if serializer.is_valid ( ):
+            print(request.data)
+            serializer.save()
+            return Response (serializer.data)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		
+    def delete(self, request, pk, wid, format=None):
+        whs = Warehouse.objects.filter(Warehouse_id = wid)
+        whs.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
