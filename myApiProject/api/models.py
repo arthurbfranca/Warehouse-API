@@ -84,8 +84,8 @@ class Route(models.Model):
     
 class Transaction(models.Model):
     Transaction_id = models.IntegerField(primary_key= True, serialize= True , default= 0, auto_created= True)
-    WH_Receiver_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING, related_name= 'WH_Sender_id')
-    WH_Sender_id = models.ForeignKey(Warehouse, on_delete = models.DO_NOTHING, related_name= 'WH_Receiver_id')
+    WH_Receiver_id = models.ForeignKey(Warehouse, on_delete = models.CASCADE, related_name= 'WH_Sender_id')
+    WH_Sender_id = models.ForeignKey(Warehouse, on_delete = models.CASCADE, related_name= 'WH_Receiver_id')
     Driver_id = models.ForeignKey(Employee, null=True, on_delete=models.SET_NULL, blank = True)
     Route_id = models.ForeignKey(Route, null=True, on_delete=models.SET_NULL, blank = True)
    
@@ -139,7 +139,7 @@ class Store(models.Model):
         unique_together = (('Warehouse_id', 'Subsection_name','Item_id'))
         
 class Transfer(models.Model):
-    Item_id = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
+    Item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
     Transaction_id = models.OneToOneField(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True)
     Quantity = models.IntegerField(default=1)
     
@@ -147,7 +147,7 @@ class Transfer(models.Model):
         return '%s %s' % (self.Transaction_id, self.Item_id)
     
 class Request(models.Model):
-    Admin_id = models.ForeignKey(Employee, on_delete=models.DO_NOTHING)
+    Admin_id = models.ForeignKey(Employee, on_delete=models.CASCADE)
     Transaction_id = models.OneToOneField(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True)
     
     def __str__(self):
@@ -155,7 +155,7 @@ class Request(models.Model):
     
 
 class Issue(models.Model):
-    Exec_id = models.ForeignKey(Employee, on_delete=models.DO_NOTHING)
+    Exec_id = models.ForeignKey(Employee, on_delete=models.CASCADE)
     Transaction_id = models.OneToOneField(Transaction, serialize= True, on_delete=models.CASCADE, primary_key= True)
     
     def __str__(self):
