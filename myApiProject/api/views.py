@@ -281,6 +281,17 @@ class WarehouseDetail (APIView):
 		whs.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
+# View all Warehouses
+class WarehouseInventoryList (APIView):
+    def get(self, request, pk, format=None):
+        stores = Store.objects.filter(Warehouse_id=pk).values('Item_id').annotate(Sum('Quantity'))
+        for s in stores:
+            item = Item.objects.get(Item_id=s["Item_id"])
+            s["Name"] = item.Name
+            s["Price"] = item.Price
+            s["Dimensions"] = item.Dimensions
+        return Response(stores)
+
 class SubsectionList (APIView):
     def get(self, request, format=None):
         subsection = Subsection.objects.all()
@@ -338,11 +349,24 @@ class StoreDetail (APIView):
 		store.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
 		
+        
 # View all Items and their quantities
 class ItemList (APIView):
     def get(self, request, format=None):
-        items = Item.objects.all()
-        stores = Store.objects.all()
+        i = Item.objects.all()
+        serializer = ItemSerializer (i, many=True)
+        return Response (serializer.data)
+
+    def post(self, request, format=None):
+        serializer = ItemSerializer (data=request.data)
+        if serializer.is_valid ( ):
+            serializer.save ( )
+            return Response (serializer.data, status=status.HTTP_201_CREATED)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)        
+        
+# View all Items and their quantities
+class ItemTotalList (APIView):
+    def get(self, request, format=None):
         stores =  Store.objects.values('Item_id').annotate(Sum('Quantity'))
         for s in stores:
             item = Item.objects.get(Item_id=s["Item_id"])
@@ -350,13 +374,6 @@ class ItemList (APIView):
             s["Price"] = item.Price
             s["Dimensions"] = item.Dimensions
         return Response(stores)
-
-    def post(self, request, format=None):
-        serializer = ItemSerializer (data=request.data)
-        if serializer.is_valid ( ):
-            serializer.save ( )
-            return Response (serializer.data, status=status.HTTP_201_CREATED)
-        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # View specific items
 class ItemDetail (APIView):
