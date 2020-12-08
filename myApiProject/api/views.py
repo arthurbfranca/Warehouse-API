@@ -232,7 +232,6 @@ class EmployeeDetail (APIView):
     def put(self, request, pk, format=None):
         emp = Employee.objects.filter(pk=pk).first()
         serializer = EmployeeSerializer(emp, data=request.data)
-        print(emp)
         if serializer.is_valid ( ):
             print(request.data)
             serializer.save()
@@ -557,9 +556,9 @@ class TransactionDetail (APIView):
 
 class RequestList (APIView):
     def get(self, request, format=None):
-        request = Request.objects.all()
-        serializer = RequestSerializer (request, many=True)
-        return Response (serializer.data)
+        req = Request.objects.all()
+        serializer = RequestSerializer(req, many= True)
+        return Response(serializer.data , status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
         serializer = RequestSerializer (data=request.data)
@@ -834,65 +833,17 @@ class AdminSubsectionItems(APIView):
         serializer = StoreSerializer(store, many = True)
         return Response(serializer.data, status=status.HTTP_200_OK)
             
-
-class ExecViewWarehouses(APIView):
-    #view all the warehouses
-    def get(self,request,pk,format = None):
-        whs = Warehouse.objects.all()
-        serializer = WarehouseSerializer (whs, many=True)
-        return Response (serializer.data)
-    
-class ExecViewWarehousDetail(APIView):
-    def get(self, request, pk, wid, format=None):
-        whs = Warehouse.objects.filter(Warehouse_id = wid)
-        serializer = WarehouseSerializer(whs, many=True)
-        return Response(serializer.data)
-		
-    def put(self, request, pk, wid, format=None):
-        whs = Warehouse.objects.filter(Warehouse_id = wid).first()
-        serializer = WarehouseSerializer(whs, data=request.data)
-        print(whs)
-        if serializer.is_valid ( ):
-            print(request.data)
-            serializer.save()
-            return Response (serializer.data)
-        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-		
-    def delete(self, request, pk, wid, format=None):
-        whs = Warehouse.objects.filter(Warehouse_id = wid)
-        whs.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
     
 class ExecViewItems(APIView):
     #view items and their quantity in every warehouse separetly
     def get(self, requests,pk,format = None):
-        stores = Store.objects.all().values('Item_id',"Warehouse_Id").annotate(Sum('Quantity'))  
+        stores = Store.objects.all().values('Item_id',"Warehouse_id").annotate(Sum('Quantity'))
+        for s in stores:
+            item = Item.objects.get(Item_id=s["Item_id"])
+            s["Name"] = item.Name
+            s["Price"] = item.Price
+            s["Dimensions"] = item.Dimensions        
         return Response(stores, status=status.HTTP_200_OK)
-
-class ExecItemDetails(APIView):
-    ##makes a new item
-    def post(self,requests,pk, iid,format=None):
-        serializer = ItemSerializer (data=request.data)
-        if serializer.is_valid ( ):
-            serializer.save ( )
-            return Response (serializer.data, status=status.HTTP_201_CREATED)
-        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
-    
-    #edits an exisiting item
-    def put(self,request,pk,iid,format=None):
-        item = Item.objects.get(Item_id = iid)
-        serializer = ItemSerializer(item, data=request.data)
-        if serializer.is_valid ( ):
-            print(request.data)
-            serializer.save()
-            return Response (serializer.data)
-        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    #deletes item (should delete the stores containing them)
-    def delete(self,request,pk,iid,format=None):
-        item = Item.objects.get(Item_id = iid)
-        item.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
     
     
 class ExecViewTransactions(APIView):
@@ -901,7 +852,7 @@ class ExecViewTransactions(APIView):
         serializer = TransactionSerializer(transactions, many=True)
         return Response(serializer.data , status=status.HTTP_200_OK)
         
-        
+       
 class ExecViewRequests(APIView):
     def get(self, requests,pk,format = None):
         req = Request.objects.all()
