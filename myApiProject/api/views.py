@@ -502,6 +502,13 @@ class WorksList (APIView):
 	    	serializer.save ()
 	    	return Response (serializer.data, status=status.HTTP_201_CREATED)
 	    return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+ 
+    def delete(self, request, format=None):
+        e = request.data["Worker_id"]
+        w = request.data["Warehouse_id"]
+        works = Works_At.objects.get(Worker_id = e, Warehouse_id = w)
+        works.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
         
 class ShipList (APIView):
     def get(self, request, format=None):
