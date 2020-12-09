@@ -67,7 +67,6 @@ class CustomerDetail (APIView):
     def put(self, request, pk, format=None):
         c = Customer.objects.filter(pk=pk).first()
         serializer = CustomerSerializer(c, data=request.data)
-        print(c)
         if serializer.is_valid ( ) and c.Cid == request.data["Cid"]:
             print(request.data)
             serializer.save()
@@ -679,6 +678,26 @@ class VehicleList (APIView):
             return Response (serializer.data,status=status.HTTP_201_CREATED)
         return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+#View the information of a given customer, edit his info, and delete him from db.
+class VehicleDetail (APIView):
+
+    def get(self, request, pk, format=None):
+        c = Vehicle.objects.get (pk=pk)
+        serializer = VehicleSerializer(c)
+        return Response (serializer.data)
+
+    def put(self, request, pk, format=None):
+        c = Vehicle.objects.filter(pk=pk).first()
+        serializer = VehicleSerializer(c, data=request.data)
+        if serializer.is_valid ( ) and c.Vehicle_id == request.data["Vehicle_id"]:
+            serializer.save()
+            return Response (serializer.data)
+        return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        c = Vehicle.objects.filter (pk=pk)
+        c.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 #worker subsections
 class WorkerSubsections (APIView):
