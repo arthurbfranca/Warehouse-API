@@ -17,6 +17,7 @@ urlpatterns = [
     path('drivers/<int:pk>/shipments/', views.DriverShipments.as_view()),
     path('drivers/<int:pk>/shipments/<int:item>/<int:cid>/<int:route>', views.DriverShipmentDetail.as_view()),
     path('drivers/<int:pk>/transactions/', views.DriverTransactions.as_view()),
+    path('drivers/<int:pk>/transactions/<int:tid>/<int:send>/<int:recv>', views.DriverTransactionRoute.as_view()),
 	path('routes/', views.RouteList.as_view()),
 	path('routes/<int:pk>', views.RouteDetail.as_view()),
 	path('warehouses/', views.WarehouseList.as_view()),

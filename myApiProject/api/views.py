@@ -206,6 +206,15 @@ class DriverTransactions (APIView):
         serializer = TransactionSerializer(s)
         return Response (serializer.data)
 
+# View specific shipment of a driver
+class DriverTransactionRoute (APIView):
+
+    def get(self, request, pk, tid, send, recv, format=None):
+        s = Transaction.objects.get (Driver_id=pk,Transaction_id=tid,WH_Receiver_id=recv,WH_Sender_id=send)
+        serializer = TransactionSerializer(s)
+        return Response (RouteSerializer(s.Route_id).data)
+
+
 # View all Employees/Add a new one
 class EmployeeList (APIView):
     def get(self, request, format=None):
