@@ -717,12 +717,14 @@ class WorkerItemDetail(APIView):
     
 #get all items in that subsection
 class WorkerSubsectionDetail (APIView):
-    def get(self, request, pk, subid, itemid, format= None):
+    def get(self, request, pk, subid, format= None):
         warehouseid = Works_At.objects.filter(Worker_id = pk).first().Warehouse_id
         stores = Store.objects.filter(Warehouse_id = warehouseid).filter(Subsection_name = subid) 
         serializer = StoreSerializer(stores, many = True)
         return Response(serializer.data)
-    
+
+#get all items in that subsection
+class WorkerSubsectionDetailChange (APIView):
 #Change quantity in a specific store
     def put(self, request, pk, subid, itemid, format = None):
         warehouseid = Works_At.objects.get(Worker_id = pk).Warehouse_id
