@@ -155,6 +155,18 @@ class AdminWorkers (APIView):
         serializer = EmployeeSerializer (l, many=True)
         return Response(serializer.data)
   
+    def post(self, request, pk, format=None):
+        wh = Warehouse.objects.get(admin_id=pk)
+        serializerW = WarehouseSerializer(wh)
+        serializerE = EmployeeSerializer (data=request.data)
+        if serializerE.is_valid ( ):
+            if(request.data["role"] == "worker"):
+                serializerE.save ( )
+                e = Employee.objects.get(Id=request.data["Id"])
+                wa = Works_At.objects.create(Warehouse_id = wh, Worker_id = e)
+                return Response (serializerE.data, status=status.HTTP_201_CREATED)
+        return Response (serializerE.errors, status=status.HTTP_400_BAD_REQUEST)
+  
 # View all executives	
 class ExecutiveList (APIView):
     def get(self, request, format=None):
