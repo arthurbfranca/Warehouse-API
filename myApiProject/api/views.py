@@ -723,6 +723,17 @@ class WorkerSubsectionDetail (APIView):
         serializer = StoreSerializer(stores, many = True)
         return Response(serializer.data)
     
+    #add a item to a subsection (creates store)
+    def post(self, request, pk, subid, itemid, format= None):
+        warehouseid = Works_At.objects.get(Worker_id= pk).Warehouse_id
+        item = Item.objects.get(Item_id =itemid)
+        sub = Subsection.objects.get(Warehouse_id = warehouseid, Name = request.data["Subsection_name"] )
+        store = Store.objects.create(Warehouse_id = warehouseid, Subsection_name = sub, Item_id = item, Quantity = request.data["Quantity"])
+        serializer = StoreSerializer(store)
+        return Response(serializer.data)
+        
+        
+    
 #Change quantity in a specific store
     def put(self, request, pk, subid, itemid, format = None):
         warehouseid = Works_At.objects.get(Worker_id = pk).Warehouse_id
