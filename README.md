@@ -1,2 +1,2 @@
-# CPSC471
-API project
+# Warehouse Management System
+API project based on relational schemas.
